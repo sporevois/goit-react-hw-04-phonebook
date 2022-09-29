@@ -1,0 +1,18 @@
+.title{
+    display: flex;
+    flex-direction: column;
+}
+
+.field{
+    width: 250px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.field:focus {
+    box-shadow: 2px 2px 10px blue;
+    transition: 250ms;
+}

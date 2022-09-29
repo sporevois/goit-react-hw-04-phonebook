@@ -1,0 +1,27 @@
+.btn{
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 5px;
+    color: black;
+    margin-left: 20px;
+    padding: 5px 15px;
+    background-color: #fff;
+    font-size: 12px;
+}
+
+.btn:hover{
+    border-color: red;
+    color: red;
+    scale: 1.05;
+    transition: 250ms;
+}
+
+.btn:active{
+    background-color: red;
+    color: white;
+}
+
+.item{
+    margin-bottom: 10px;
+}

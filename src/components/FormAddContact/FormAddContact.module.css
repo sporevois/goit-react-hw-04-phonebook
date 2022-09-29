@@ -1,0 +1,48 @@
+.form{
+    display: flex;
+    flex-direction: column;
+    width: 450px;
+    padding: 13px 15px;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+
+.title{
+    display: flex;
+    flex-direction: column;
+}
+
+.field{
+    width: 250px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    padding: 5px 10px;
+    font-size: 16px;
+    border-radius: 4px;
+}
+.field:focus{
+    box-shadow: 2px 2px 10px blue;
+    transition: 250ms;
+}
+
+.btn{
+    display: inline-block;
+    width: 200px;   
+    padding: 5px 15px;
+    border: 1px solid black;
+    border-radius: 5px;
+    color: black;
+    background-color: rgb(234, 232, 232);
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.btn:hover { 
+    scale: 1.05;
+    transition: 250ms;
+}
+
+.btn:active {
+    background-color:black;
+    color: white;
+}
