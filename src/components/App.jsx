@@ -1,90 +1,62 @@
-import { Component } from "react";
+import { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
 import FormAddContact from "./FormAddContact/FormAddContact";
 import ContatList from "./ContactList/ContactList";
 import Filter from "./Filter/Filter";
 
-export class App extends Component {
+export const App = () => {
+  const [contacts, setContacts] = useState(() => {
+    // getting stored value
+    const saved = localStorage.getItem("contacts");
+    const initialValue = JSON.parse(saved);
+    return initialValue || [];
+  });
+  const [filter, setFilter] = useState('');
 
-  state = {
-    contacts: [],
-    filter: '',
-  }
 
-  componentDidMount() {
-    const savedData = localStorage.getItem("contacts");
-    if (savedData) {
-      const savedContacts = JSON.parse(savedData);
-      if (savedContacts.length !== 0) {
-        this.setState({contacts: savedContacts})
-      }
-    }
-  }
+  useEffect(() => {
+    localStorage.setItem("contacts", JSON.stringify(contacts))
+  }, [contacts]);
 
-  componentDidUpdate(prevProp, prevState) {
-    const { contacts } = this.state;
-    if (prevState.contacts !== contacts) {
-      localStorage.setItem("contacts", JSON.stringify(contacts))
-    }
-  }
-
-  handleChange = (event) => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
-    this.setState({ [name]: value });
-  }
-
-  addContact = (contact) => {
-    if (this.isDublicate(contact.name)) {
-      return alert(`${contact.name} is already in contacts.`)
+    switch (name) {
+      case 'filter': return setFilter(value);
+      default: return
     }
-    this.setState((prevState) => {
-      const newContact = {
-          id: nanoid(),
-          ...contact
-      }
-      return {
-        contacts: [...prevState.contacts, newContact]
-        
-      }
-    })
   }
 
-  deleteContact = (id) => {
-    this.setState((prevState) => {
-      const refreshedContacts = prevState.contacts.filter((contact) => contact.id !== id);
-      return {
-        contacts: refreshedContacts
-      }
+  const addContact = (name, number) => {
+    if (isDublicate(name)) {
+      return alert(`${name} is already in contacts.`)
+    }
+    const newContact = {
+      id: nanoid(),
+      name,
+      number,          
+    }
+    setContacts((prev)=>[...prev, newContact])
+  }
+
+  const deleteContact = (id) => {
+    setContacts((prev) => {
+      return prev.filter((contact) => contact.id !== id);
     })
   }
   
-  getFilteredContacts() {
-    const { contacts, filter } = this.state;
+  const getFilteredContacts = () => {
     if (!filter) {
       return contacts;
     }
-    const normalizedFilter = filter.toLocaleLowerCase();
-    const filteredContacts = contacts.filter(({ name }) => {
-      const normalizedName = name.toLocaleLowerCase();
-      const result = normalizedName.includes(normalizedFilter);
-      return result;
-    })
-    return filteredContacts;
+    return contacts.filter(contact => contact.name.toLowerCase().includes(filter));
   }
 
-  isDublicate(name) {
-    const { contacts } = this.state;
-    const result = contacts.find((contact) => contact.name.toLocaleLowerCase() === name.toLocaleLowerCase());
-    return result
+  const isDublicate = (name) => {
+    return contacts.find((contact) => contact.name.toLocaleLowerCase() === name.toLocaleLowerCase());
   }
 
-  render() {
-    const { filter } = this.state;
-    const { addContact, handleChange, deleteContact } = this;
-    const contacts = this.getFilteredContacts();
-
-     return (
-       <div style={{
+  return (
+      <div style={{
         padding: "15px",
         fontSize: "20px",
         color: "#010101"
@@ -96,9 +68,10 @@ export class App extends Component {
            handleChange={handleChange}
            filter={filter} />
          <ContatList
-           contacts={contacts}
+           contacts={getFilteredContacts()}
            deleteContact={deleteContact} />
       </div>
-    )
-  }
-};
+  )
+}
+
+

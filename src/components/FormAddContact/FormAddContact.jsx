@@ -1,33 +1,30 @@
-import { Component } from "react";
+import { useState} from "react";
 import PropTypes from 'prop-types';
 import styles from "../FormAddContact/FormAddContact.module.css"
 
-export default class FormAddContact extends Component {
-    state = {
-        name: '',
-        number: '',
-    }
-    handleSubmit = (event) => {
+const FormAddContact = ({onSubmit}) => {
+    const [name, setName] = useState('');
+    const [number, setNumber] = useState('');
+
+    const handleSubmit = (event) => {
         event.preventDefault();
-        const { name, number } = this.state;
-        this.props.onSubmit({ name, number });
-        this.setState({
-            name: '',
-            number: '',
-        })
+        onSubmit(name, number);
+        setName('');
+        setNumber('');
     }
 
-    handleChange = (event) => {
+    const handleChange = (event) => {
         const { name, value } = event.target;
-        this.setState({ [name]: value });
+        switch (name) {
+            case 'name': return setName(value);
+            case 'number': return setNumber(value); 
+            default: return
+        }
+        
     }
 
-   
-    render() {
-        const { name, number } = this.state;
-        const { handleSubmit, handleChange } = this;
-        return (
-            <form className={styles.form} onSubmit={handleSubmit}>
+    return (
+        <form className={styles.form} onSubmit={handleSubmit}>
             <label className={styles.title}>
                 Name
                 <input
@@ -56,9 +53,9 @@ export default class FormAddContact extends Component {
             </label>
                 <button className={styles.btn} type="submit">Add contact</button>
           </form>
-        )
-    }
+    )
 }
+export default FormAddContact;
 
 FormAddContact.propTypes = {
     onSubmit: PropTypes.func.isRequired
